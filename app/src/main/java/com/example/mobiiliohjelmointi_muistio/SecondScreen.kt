@@ -9,6 +9,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -26,6 +27,41 @@ class SecondScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second_screen)
+
+        val intent = intent
+
+        //Otetaan putextran info value muuttujaan
+        val info = intent.getStringExtra("info")
+
+        //Luodaan näkymä lisäykselle
+        if (info.equals("new")) {
+            //Otetaan placeholder kuva muuttujaan
+            val background = BitmapFactory.decodeResource(applicationContext.resources,R.drawable.addimage)
+            //Annetaan placeholderkuva elementille
+            addImage.setImageBitmap(background)
+            //Tallenna näppäin näkyväksi
+            saveBtn.visibility = View.VISIBLE
+            //Tittlefieldi tyhjäksi
+            titleField.setText("")
+        }
+        //Näytetään lisätty
+        else {
+            //Otetaan putextran title value muuttujana
+            val title = intent.getStringExtra("title")
+            //TODO content
+            
+            //Lisätään title fieldiin otsikko
+            titleField.setText(title)
+
+            //Haetaan kuva globaalista classista
+            val chosen = Globals.Chosen
+            val bitmap = chosen.returnImage()
+
+            //Lisätään kuva elementtiin
+            addImage.setImageBitmap(bitmap)
+            //Piilotetaan tallenna näppäin
+            saveBtn.visibility = View.INVISIBLE
+        }
     }
 
     //Annetaan kameralle ja gallerialle request numero, jolla yksilöidään tapahtuma

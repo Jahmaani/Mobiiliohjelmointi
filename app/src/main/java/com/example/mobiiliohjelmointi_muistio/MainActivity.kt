@@ -18,10 +18,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val artNameArray = ArrayList<String>()
+        //Luodaan Taulukolle ja kuville listat
+        val titleArray = ArrayList<String>()
         val artImageArray = ArrayList<Bitmap>()
+        //TODO content
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, artNameArray)
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titleArray)
 
         listView.adapter = arrayAdapter
 
@@ -40,23 +42,28 @@ class MainActivity : AppCompatActivity() {
             //Otetaan kuva muuttujaan
             val imageidx = cursor.getColumnIndex("image")
 
-            //Siirretään cursori ensimmäiseen elementtiin
+            //TODO content
+
+            //Hypätään ensimmäiselle riville
             cursor.moveToFirst()
 
             //Loopataan elementit läpi
             while (cursor != null) {
-                artNameArray.add(cursor.getString(nameidx))
+                //Lisätään Otsikot listaan
+                titleArray.add(cursor.getString(nameidx))
+                //TODO content
+
                 val byteArray = cursor.getBlob(imageidx)
                 val image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-
+                //Lisätään kuvat listaan
                 artImageArray.add(image)
-
+                //Hypätään seuraavaan riviin
                 cursor.moveToNext()
-
+                //En tiedä mitä tekee
                 arrayAdapter.notifyDataSetChanged()
 
             }
-
+            //Lopetetaan tietokanna haku
             cursor?.close()
 
         } catch (e: Exception) {
@@ -64,11 +71,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+            //Kutsutaan secondscreeniä
             val intent = Intent(applicationContext, SecondScreen::class.java)
-            intent.putExtra("name", artNameArray[i])
+            //Lisätään putextralle arvoja
+            intent.putExtra("title", titleArray[i])
+            //TODO content
             intent.putExtra("info", "old")
 
+            //Luodaan olio
             val chosen = Globals.Chosen
+            //Lisätään kuva taulukosta olioon
             chosen.chosenImage = artImageArray[i]
 
             startActivity(intent)
