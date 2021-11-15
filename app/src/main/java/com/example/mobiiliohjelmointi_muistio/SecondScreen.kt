@@ -49,9 +49,13 @@ class SecondScreen : AppCompatActivity() {
             //Otetaan putextran title value muuttujana
             val title = intent.getStringExtra("title")
             //TODO content
+            val content = intent.getStringExtra("content")
             
             //Lisätään title fieldiin otsikko
             titleField.setText(title)
+
+            // Lisätään content fieldiin content
+            contentField.setText(content)
 
             //Haetaan kuva globaalista classista
             val chosen = Globals.Chosen

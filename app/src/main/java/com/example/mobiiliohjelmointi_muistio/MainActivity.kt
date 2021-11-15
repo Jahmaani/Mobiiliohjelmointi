@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         val titleArray = ArrayList<String>()
         val artImageArray = ArrayList<Bitmap>()
         //TODO content
+        val contentArray = ArrayList<String>()
+
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titleArray)
 
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             val imageidx = cursor.getColumnIndex("image")
 
             //TODO content
+            val contentidx = cursor.getColumnIndex("content")
 
             //Hypätään ensimmäiselle riville
             cursor.moveToFirst()
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 //Lisätään Otsikot listaan
                 titleArray.add(cursor.getString(nameidx))
                 //TODO content
+                contentArray.add(cursor.getString(contentidx))
 
                 val byteArray = cursor.getBlob(imageidx)
                 val image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -76,6 +80,7 @@ class MainActivity : AppCompatActivity() {
             //Lisätään putextralle arvoja
             intent.putExtra("title", titleArray[i])
             //TODO content
+            intent.putExtra("content", contentArray[i])
             intent.putExtra("info", "old")
 
             //Luodaan olio
