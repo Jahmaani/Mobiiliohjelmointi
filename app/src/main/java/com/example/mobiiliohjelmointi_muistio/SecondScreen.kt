@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log.d
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_second_screen.*
@@ -46,15 +47,14 @@ class SecondScreen : AppCompatActivity() {
         }
         //Näytetään lisätty
         else {
-            //Otetaan putextran title value muuttujana
+            //Otetaan putextran valuet muuttujaan
+            // val id = intent.getIntExtra("id", -1)
             val title = intent.getStringExtra("title")
-            //TODO content
             val content = intent.getStringExtra("content")
-            
-            //Lisätään title fieldiin otsikko
-            titleField.setText(title)
 
-            // Lisätään content fieldiin content
+            // Lisätään arvot kenttiin
+            // idField.setText(id.toString())
+            titleField.setText(title)
             contentField.setText(content)
 
             //Haetaan kuva globaalista classista
@@ -155,6 +155,8 @@ class SecondScreen : AppCompatActivity() {
         val noteContent = contentField.text.toString()
         val outputStream = ByteArrayOutputStream()
 
+        val id = intent.getLongExtra("id", -1)
+
         //Pakataan kuva
         selectedImage?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
         //Lisätään kuva bytearray muuttujaan.
@@ -164,16 +166,21 @@ class SecondScreen : AppCompatActivity() {
             //Luodaan database
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
             //Luodaan taulut
-            database.execSQL("create table if not exists note(title varchar, image blob, content varchar)")
+            // database.execSQL("create table if not exists note(title varchar, image blob, content varchar)")
+            database.execSQL("create table if not exists note(id integer primary key autoincrement, title varchar, image blob, content varchar)")
             //SQL String tyhjillä muuttujilla
             val sqlString = "insert into note (title, image, content) values (?, ?, ?)"
             val statement = database.compileStatement(sqlString)
             //Lisätään sql lauseeseen muuttujat
+            // statement.bindLong(1, id)
             statement.bindString(1, noteTitle)
             statement.bindBlob(2, byteArray)
             statement.bindString(3, noteContent)
+
+
             //tehdään työ
             statement.execute()
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -183,4 +190,35 @@ class SecondScreen : AppCompatActivity() {
         startActivity(intent)
 
     }
+
+    // Muistiinpanon poisto
+
+    fun deleteNote(view: View) {
+
+        // val titleDel = titleField.text.toString()
+        // val position = intent.getLongExtra("id", -1)
+
+
+
+        try {
+            //Avataan database
+            val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
+            val sqlString = "delete from note where 'id=?' (id)"
+            // val sqlString = "delete from note where id=$position"
+            d("smv", sqlString)
+            val statement = database.compileStatement(sqlString)
+            statement.execute()
+
+        }
+        catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        //Kun nämä on tehty, niin palataan MainActivity näyttöön.
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
+
+
+    }
+
 }

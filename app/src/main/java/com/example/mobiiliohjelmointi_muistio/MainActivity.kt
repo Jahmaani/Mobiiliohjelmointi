@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log.d
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
@@ -18,10 +19,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Luodaan Taulukolle ja kuville listat
+        // Luodaan tiedoille listat
         val titleArray = ArrayList<String>()
         val artImageArray = ArrayList<Bitmap>()
-        //TODO content
         val contentArray = ArrayList<String>()
 
 
@@ -33,18 +33,15 @@ class MainActivity : AppCompatActivity() {
             //Luodaan database
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
             //Luodaan taulut
-            database.execSQL("create table if not exists note(title varchar, image blob, content varchar)")
+            database.execSQL("create table if not exists note(id integer primary key autoincrement, title varchar, image blob, content varchar)")
 
             //SQL query
             val cursor = database.rawQuery("select * from note", null)
 
-            //Otetaan nimi muuttujaan
+
+            //Otetaan tiedot muuttujiin
             val nameidx = cursor.getColumnIndex("title")
-
-            //Otetaan kuva muuttujaan
             val imageidx = cursor.getColumnIndex("image")
-
-            //TODO content
             val contentidx = cursor.getColumnIndex("content")
 
             //Hypätään ensimmäiselle riville
@@ -52,9 +49,8 @@ class MainActivity : AppCompatActivity() {
 
             //Loopataan elementit läpi
             while (cursor != null) {
-                //Lisätään Otsikot listaan
+                //Lisätään otsikot ja content listaan
                 titleArray.add(cursor.getString(nameidx))
-                //TODO content
                 contentArray.add(cursor.getString(contentidx))
 
                 val byteArray = cursor.getBlob(imageidx)
@@ -66,22 +62,31 @@ class MainActivity : AppCompatActivity() {
                 //En tiedä mitä tekee
                 arrayAdapter.notifyDataSetChanged()
 
+
+
             }
-            //Lopetetaan tietokanna haku
+            //Lopetetaan tietokannan haku
             cursor?.close()
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
+
+        // i = position, l = id
         listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             //Kutsutaan secondscreeniä
             val intent = Intent(applicationContext, SecondScreen::class.java)
             //Lisätään putextralle arvoja
+            val id: Long = l.toLong()
+
+            intent.putExtra("id", id)
             intent.putExtra("title", titleArray[i])
-            //TODO content
             intent.putExtra("content", contentArray[i])
             intent.putExtra("info", "old")
+
+            d("smv", i.toString())
+            d("smv", l.toString())
 
             //Luodaan olio
             val chosen = Globals.Chosen
