@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.icu.util.UniversalTimeScale.toLong
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -214,12 +215,15 @@ class SecondScreen : AppCompatActivity() {
             database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
             //SQL String tyhjillä muuttujilla
             val sqlString = "insert into note (ID, title, image, content) values (?, ?, ?, ?)"
+            println("sqlstring: " + sqlString)
+
             val statement = database.compileStatement(sqlString)
             //Lisätään sql lauseeseen muuttujat
             statement.bindNull(1)
             statement.bindString(2, noteTitle)
             statement.bindBlob(3, byteArray)
             statement.bindString(4, noteContent)
+            println("Statement: $statement")
 
 
             //tehdään työ
@@ -268,23 +272,25 @@ class SecondScreen : AppCompatActivity() {
         selectedImage?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
         //Lisätään kuva bytearray muuttujaan.
         val byteArray = outputStream.toByteArray()
-        println("Bytearray: $byteArray")
 
         try {
             //Luodaan database
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
             //Luodaan taulut
             database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
-            println("title $noteTitle")
-            println("content $noteContent")
-            println("image $byteArray")
-            println("id $id_item")
+            val sqlDeleteString = "delete from note where id=$id_item"
+            val statementDelete = database.compileStatement(sqlDeleteString)
+            statementDelete.execute()
 
-            val sqlString = "update note set title = '$noteTitle', image = '$byteArray', content = '$noteContent' where ID=$id_item"
-            println(sqlString)
+            val sqlString = "insert into note (ID, title, image, content) values (?, ?, ?, ?)"
+
             val statement = database.compileStatement(sqlString)
+            //Lisätään sql lauseeseen muuttujat
+            statement.bindLong(1, id_item!!.toLong())
+            statement.bindString(2, noteTitle)
+            statement.bindBlob(3, byteArray)
+            statement.bindString(4, noteContent)
 
-            println("update: $statement")
 
             statement.execute()
         } catch (e: Exception) {
