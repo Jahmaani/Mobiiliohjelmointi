@@ -17,6 +17,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log.d
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_second_screen.*
@@ -110,6 +111,16 @@ class SecondScreen : AppCompatActivity() {
 
                 override fun onTextChanged(s: CharSequence, start: Int,
                                            before: Int, count: Int) {
+                }
+            })
+
+            addImage.setOnTouchListener(object : View.OnTouchListener {
+                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                    when (event?.action) {
+                        MotionEvent.ACTION_DOWN -> updateBtn.visibility = View.VISIBLE
+                    }
+
+                    return v?.onTouchEvent(event) ?: true
                 }
             })
         }
