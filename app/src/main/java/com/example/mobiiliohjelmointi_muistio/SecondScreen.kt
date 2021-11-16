@@ -24,6 +24,7 @@ class SecondScreen : AppCompatActivity() {
 
     //Kuvan muuttuja
     var selectedImage : Bitmap? = null
+    var id_item : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +49,23 @@ class SecondScreen : AppCompatActivity() {
         //Näytetään lisätty
         else {
             //Otetaan putextran valuet muuttujaan
-            // val id = intent.getIntExtra("id", -1)
             val title = intent.getStringExtra("title")
             val content = intent.getStringExtra("content")
+            id_item = intent.getIntExtra("id", -1)
 
             // Lisätään arvot kenttiin
-            // idField.setText(id.toString())
             titleField.setText(title)
             contentField.setText(content)
 
-            //Haetaan kuva globaalista classista
             val chosen = Globals.Chosen
-            val bitmap = chosen.returnImage()
+            //Haetaan kuva globaalista classista
+            if (chosen.chosenImage == null) {//POISTOON
+                addImage.setImageBitmap(BitmapFactory.decodeResource(applicationContext.resources,R.drawable.addimage))
+            } else {
+                val bitmap = chosen.returnImage()
+                addImage.setImageBitmap(bitmap)
+            }
 
-            //Lisätään kuva elementtiin
-            addImage.setImageBitmap(bitmap)
             //Piilotetaan tallenna näppäin
             saveBtn.visibility = View.INVISIBLE
         }
@@ -155,8 +158,6 @@ class SecondScreen : AppCompatActivity() {
         val noteContent = contentField.text.toString()
         val outputStream = ByteArrayOutputStream()
 
-        val id = intent.getLongExtra("id", -1)
-
         //Pakataan kuva
         selectedImage?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
         //Lisätään kuva bytearray muuttujaan.
@@ -167,15 +168,15 @@ class SecondScreen : AppCompatActivity() {
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
             //Luodaan taulut
             // database.execSQL("create table if not exists note(title varchar, image blob, content varchar)")
-            database.execSQL("create table if not exists note(id integer primary key autoincrement, title varchar, image blob, content varchar)")
+            database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
             //SQL String tyhjillä muuttujilla
-            val sqlString = "insert into note (title, image, content) values (?, ?, ?)"
+            val sqlString = "insert into note (ID, title, image, content) values (?, ?, ?, ?)"
             val statement = database.compileStatement(sqlString)
             //Lisätään sql lauseeseen muuttujat
-            // statement.bindLong(1, id)
-            statement.bindString(1, noteTitle)
-            statement.bindBlob(2, byteArray)
-            statement.bindString(3, noteContent)
+            statement.bindNull(1)
+            statement.bindString(2, noteTitle)
+            statement.bindBlob(3, byteArray)
+            statement.bindString(4, noteContent)
 
 
             //tehdään työ
@@ -195,20 +196,14 @@ class SecondScreen : AppCompatActivity() {
 
     fun deleteNote(view: View) {
 
-        // val titleDel = titleField.text.toString()
-        // val position = intent.getLongExtra("id", -1)
-
-
-
         try {
             //Avataan database
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
-            val sqlString = "delete from note where 'id=?' (id)"
-            // val sqlString = "delete from note where id=$position"
-            d("smv", sqlString)
+            database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
+            val sqlString = "delete from note where id=$id_item"
+
             val statement = database.compileStatement(sqlString)
             statement.execute()
-
         }
         catch (e: Exception) {
             e.printStackTrace()

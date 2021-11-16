@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         val titleArray = ArrayList<String>()
         val artImageArray = ArrayList<Bitmap>()
         val contentArray = ArrayList<String>()
+        val idArray = ArrayList<Int>()
 
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titleArray)
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             //Luodaan database
             val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
             //Luodaan taulut
-            database.execSQL("create table if not exists note(id integer primary key autoincrement, title varchar, image blob, content varchar)")
+            database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
 
             //SQL query
             val cursor = database.rawQuery("select * from note", null)
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             val nameidx = cursor.getColumnIndex("title")
             val imageidx = cursor.getColumnIndex("image")
             val contentidx = cursor.getColumnIndex("content")
+            val idx = cursor.getColumnIndex("ID")
 
             //Hypätään ensimmäiselle riville
             cursor.moveToFirst()
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 //Lisätään otsikot ja content listaan
                 titleArray.add(cursor.getString(nameidx))
                 contentArray.add(cursor.getString(contentidx))
+                idArray.add(cursor.getInt(idx))
 
                 val byteArray = cursor.getBlob(imageidx)
                 val image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -78,15 +81,10 @@ class MainActivity : AppCompatActivity() {
             //Kutsutaan secondscreeniä
             val intent = Intent(applicationContext, SecondScreen::class.java)
             //Lisätään putextralle arvoja
-            val id: Long = l.toLong()
-
-            intent.putExtra("id", id)
+            intent.putExtra("id", idArray[i])
             intent.putExtra("title", titleArray[i])
             intent.putExtra("content", contentArray[i])
             intent.putExtra("info", "old")
-
-            d("smv", i.toString())
-            d("smv", l.toString())
 
             //Luodaan olio
             val chosen = Globals.Chosen
