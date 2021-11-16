@@ -13,6 +13,8 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log.d
 import android.view.View
 import android.widget.Toast
@@ -43,10 +45,14 @@ class SecondScreen : AppCompatActivity() {
             addImage.setImageBitmap(background)
             //Tallenna näppäin näkyväksi
             saveBtn.visibility = View.VISIBLE
+            //Poista ja update buttonit piiloon
+            updateBtn.visibility = View.INVISIBLE
+            deleteBtn.visibility = View.INVISIBLE
+
             //Tittlefieldi tyhjäksi
             titleField.setText("")
         }
-        //Näytetään lisätty
+        //Näytetään muokkaus
         else {
             //Otetaan putextran valuet muuttujaan
             val title = intent.getStringExtra("title")
@@ -68,6 +74,43 @@ class SecondScreen : AppCompatActivity() {
 
             //Piilotetaan tallenna näppäin
             saveBtn.visibility = View.INVISIBLE
+            updateBtn.visibility = View.INVISIBLE
+
+            //Katsotaan onko otsikko kenttä muuttunut
+            titleField.addTextChangedListener(object : TextWatcher {
+
+                override fun afterTextChanged(s: Editable) {
+                    updateBtn.visibility = View.VISIBLE
+
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int,
+                                               count: Int, after: Int) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int,
+                                           before: Int, count: Int) {
+                }
+            })
+
+            //Katsotaan onko contentti kenttä muuttunut
+            contentField.addTextChangedListener(object : TextWatcher {
+
+                override fun afterTextChanged(s: Editable) {
+                    updateBtn.visibility = View.VISIBLE
+
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int,
+                                               count: Int, after: Int) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence, start: Int,
+                                           before: Int, count: Int) {
+                }
+            })
         }
     }
 
@@ -216,4 +259,41 @@ class SecondScreen : AppCompatActivity() {
 
     }
 
+    fun updateNote(view: View) {
+        //Otetaan title ja content muuttujiin
+        val noteTitle = titleField.text.toString()
+        val noteContent = contentField.text.toString()
+        val outputStream = ByteArrayOutputStream()
+        //Pakataan kuva
+        selectedImage?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
+        //Lisätään kuva bytearray muuttujaan.
+        val byteArray = outputStream.toByteArray()
+        println("Bytearray: $byteArray")
+
+        try {
+            //Luodaan database
+            val database = this.openOrCreateDatabase("Notes", Context.MODE_PRIVATE, null)
+            //Luodaan taulut
+            database.execSQL("create table if not exists note(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title varchar, image blob, content varchar)")
+            println("title $noteTitle")
+            println("content $noteContent")
+            println("image $byteArray")
+            println("id $id_item")
+
+            val sqlString = "update note set title = '$noteTitle', image = '$byteArray', content = '$noteContent' where ID=$id_item"
+            println(sqlString)
+            val statement = database.compileStatement(sqlString)
+
+            println("update: $statement")
+
+            statement.execute()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        //Kun nämä on tehty, niin palataan MainActivity näyttöön.
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
+
+    }
 }

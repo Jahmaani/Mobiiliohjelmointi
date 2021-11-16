@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
                 val byteArray = cursor.getBlob(imageidx)
                 val image = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                println("cursor.blobimg: "+cursor.getBlob(imageidx) + " kuva: $image, id: "+cursor.getInt(idx))
                 //Lisätään kuvat listaan
                 artImageArray.add(image)
                 //Hypätään seuraavaan riviin
