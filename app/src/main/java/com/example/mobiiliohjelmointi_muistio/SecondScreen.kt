@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.icu.text.SimpleDateFormat
 import android.icu.util.UniversalTimeScale.toLong
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +24,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_second_screen.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+import java.util.*
 
 class SecondScreen : AppCompatActivity() {
 
@@ -276,7 +278,15 @@ class SecondScreen : AppCompatActivity() {
 
     fun updateNote(view: View) {
         //Otetaan title ja content muuttujiin
-        val noteTitle = titleField.text.toString()
+        val sdf = SimpleDateFormat("dd.M.yyyy")
+        val currentDate = sdf.format(Date())
+
+        var noteTitle = titleField.text.toString()
+
+        if (noteTitle == "" || noteTitle == null) {
+            noteTitle = currentDate
+        }
+
         val noteContent = contentField.text.toString()
         val outputStream = ByteArrayOutputStream()
         //Pakataan kuva
