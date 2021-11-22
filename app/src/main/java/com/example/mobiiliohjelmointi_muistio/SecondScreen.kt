@@ -211,9 +211,16 @@ class SecondScreen : AppCompatActivity() {
     fun saveNote(view: View) {
 
         //Otetaan title ja content muuttujiin
-        val noteTitle = titleField.text.toString()
+        var noteTitle = titleField.text.toString()
         val noteContent = contentField.text.toString()
         val outputStream = ByteArrayOutputStream()
+
+        val sdf = SimpleDateFormat("dd.M.yyyy")
+        val currentDate = sdf.format(Date())
+
+        if (noteTitle == "" || noteTitle == null) {
+            noteTitle = currentDate
+        }
 
         //Pakataan kuva
         selectedImage?.compress(Bitmap.CompressFormat.PNG, 50, outputStream)
