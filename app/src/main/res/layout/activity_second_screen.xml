@@ -5,6 +5,7 @@
     android:id="@+id/linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     tools:context=".SecondScreen">
 
@@ -12,6 +13,7 @@
         android:id="@+id/titleField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Otsikko...."
         android:inputType="textPersonName" />
@@ -20,6 +22,8 @@
         android:id="@+id/addImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:onClick="selectImage"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/addimage" />
@@ -28,6 +32,7 @@
         android:id="@+id/contentField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="Tekstiä...."
         android:inputType="textMultiLine"
@@ -44,7 +49,10 @@
             android:id="@+id/deleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:background="@drawable/style"
             android:onClick="deleteNote"
             android:text="Poista" />
 
@@ -53,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/style"
             android:onClick="saveNote"
             android:text="Tallenna" />
 
@@ -60,7 +69,10 @@
             android:id="@+id/updateBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
+            android:background="@drawable/style"
             android:onClick="updateNote"
             android:text="Tallenna" />
 
