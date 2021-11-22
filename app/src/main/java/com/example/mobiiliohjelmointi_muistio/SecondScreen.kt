@@ -11,16 +11,13 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.icu.text.SimpleDateFormat
-import android.icu.util.UniversalTimeScale.toLong
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log.d
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_second_screen.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception

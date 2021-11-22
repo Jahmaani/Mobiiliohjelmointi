@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             val contentidx = cursor.getColumnIndex("content")
             val idx = cursor.getColumnIndex("ID")
 
+
             //Hypätään ensimmäiselle riville
             cursor.moveToFirst()
 
