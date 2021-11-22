@@ -16,7 +16,9 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Otsikko...."
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/brown"
+        android:textColorHint="@color/brown" />
 
     <ImageView
         android:id="@+id/addImage"
@@ -37,8 +39,10 @@
         android:hint="Tekstiä...."
         android:inputType="textMultiLine"
         android:maxLines="8"
-        android:minLines="6"
-        android:scrollbars="vertical" />
+        android:minLines="4"
+        android:scrollbars="vertical"
+        android:textColor="@color/brown"
+        android:textColorHint="@color/brown" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/style"
             android:onClick="deleteNote"
@@ -60,6 +65,7 @@
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/style"
             android:onClick="saveNote"
@@ -71,6 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/style"
             android:onClick="updateNote"
