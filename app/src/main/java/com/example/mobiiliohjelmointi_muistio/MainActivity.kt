@@ -4,13 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log.d
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 
@@ -26,7 +30,17 @@ class MainActivity : AppCompatActivity() {
         val idArray = ArrayList<Int>()
 
 
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titleArray)
+        //val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, titleArray)
+
+        val arrayAdapter: ArrayAdapter<String> =
+            object : ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titleArray) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val v = super.getView(position, convertView, parent)
+                    val tv = v.findViewById<TextView>(android.R.id.text1)
+                    tv.setTextColor(Color.parseColor("#968C83"))
+                    return v
+                }
+            }
 
         listView.adapter = arrayAdapter
 
